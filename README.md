@@ -15,11 +15,18 @@ Chess/
 └── External Libraries   # LibGDX (gdx-liftoff), OpenJDK 25
 
 ```
-## Local PvP
-![动画](https://github.com/user-attachments/assets/479192ab-1d65-4236-b997-42823bc2dd30)
-
-## VS AI
-![AI走子](https://github.com/user-attachments/assets/c30871f1-53ca-45b3-94fb-1cc148397bbd)
+<table>
+  <tr>
+    <td align="center">
+      <h3>Local PvP</h3>
+      <img src="https://github.com/user-attachments/assets/479192ab-1d65-4236-b997-42823bc2dd30" width="100%"/>
+    </td>
+    <td align="center">
+      <h3>VS AI</h3>
+      <img src="https://github.com/user-attachments/assets/c30871f1-53ca-45b3-94fb-1cc148397bbd" width="100%"/>
+    </td>
+  </tr>
+</table>
 
 ---
 
