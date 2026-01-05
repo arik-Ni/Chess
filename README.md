@@ -1,8 +1,8 @@
-# ♟️ Java Chess (基于 LibGDX 开发)
+# ♟️ Java Chess (LibGDX Based)
 
-本项目是采用 **Java 语言**与 **LibGDX 框架**开发打造的 **2D 国际象棋游戏**。它不仅实现了完整的国际象棋规则，还针对业余爱好者的对弈体验，手搓了一套经过置换表优化的 AI 引擎。
+This project is a **2D Chess game** developed using the **Java programming language** and the **LibGDX framework**. It features a comprehensive implementation of international chess rules alongside an **AI engine** optimized with a **Transposition Table (TT)** to enhance the experience for amateur players.
 
-## 📁 Project Structure / 项目结构
+## 📁 Project Structure 
 
 ```text
 Chess/
@@ -15,6 +15,11 @@ Chess/
 └── External Libraries   # LibGDX (gdx-liftoff), OpenJDK 25
 
 ```
+## Local PvP
+![动画](https://github.com/user-attachments/assets/479192ab-1d65-4236-b997-42823bc2dd30)
+
+## VS AI
+![AI走子](https://github.com/user-attachments/assets/c30871f1-53ca-45b3-94fb-1cc148397bbd)
 
 ---
 
