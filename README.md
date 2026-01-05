@@ -32,7 +32,7 @@ Chess/
 
 ## 🌍 Language Versions
 
-* [English] | [Français] | [中文]
+* English | Français | 中文
 
 ---
 
