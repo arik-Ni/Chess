@@ -37,74 +37,112 @@ Ce projet est un **jeu d'échecs 2D** développé avec le **langage Java** et le
 
 ---
 
-## English
+## ♟️ Technical Details 
 
-### 📌 Overview
+### • Main.java (Startup & Configuration)
 
-This is a **2D Chess game** developed with the **Java language** and the **LibGDX framework**. It supports **Local PvP** and **VS Computer** modes, featuring a customized AI and professional **Fischer Clock** timing.
+* **Bootstrap**: Sets up the rendering environment with **Vsync** and 60FPS target for smooth visual output.
+* **GPU Acceleration**: Leverages the LibGDX framework to utilize hardware acceleration for efficient graphics redrawing.
 
-### 🧠 Data Structures & AI Logic (60+ Methods)
+### • AI.java (Decision Engine & Performance Optimization)
 
-* **Search Optimization (From Minimax to TT)**:
-A standard 5-depth Minimax search required evaluating **~1.5 million nodes**.
-* **The Solution**: Implemented **Zobrist Hashing** and a **Transposition Table (TT)**.
-* **The Result**: The TT stores **Exact Values, Lower Bounds, and Upper Bounds**, enabling smooth 5-depth search by eliminating redundant calculations.
-
-
-* **Move Ordering (MVV-LVA)**:
-Prioritizes captures based on the **"Most Valuable Victim - Least Valuable Attacker"** heuristic (e.g., Queen captures Pawn > Pawn captures Queen) to maximize **Alpha-Beta pruning** efficiency.
-* **Evaluation Engine**:
-* **PST (Piece-Square Tables)**: Assigns positional bonuses based on master experience.
-* **Endgame Logic**: When few pieces remain, the AI encourages **King activity and centralization**.
-* **Automatic Promotion**: The AI automatically promotes pawns to Queens to streamline gameplay.
+* **Performance Crisis**: The initial **Minimax** algorithm (with Alpha-Beta pruning) at depth 5 required evaluating **1.5 million+ nodes**. Even on a mid-to-high-end PC (**RTX 3050Ti + Ryzen 5600H**), this caused severe lag, rendering the game unplayable.
+* **Self-Taught Optimization (Transposition Table)**: To overcome this hardware bottleneck, I **self-studied and implemented** advanced optimization techniques:
+* **Zobrist Hashing**: Generates 64-bit unique keys for board states to track repeated positions.
+* **TT Implementation**: By storing exact values and bounds (Lower/Upper), the system eliminates redundant searches, successfully reducing search latency from seconds to **milliseconds**.
 
 
-
----
-
-## Français
-
-### 📌 Aperçu
-
-Ce projet est un **jeu d'échecs 2D** développé avec le **langage Java** et le **framework LibGDX**. Il s'adresse aux amateurs et propose des modes **PvP local** et **IA vs Humain**, intégrant un système de chronométrage professionnel **Fischer**.
-
-### 🧠 IA et Logique Algorithmique (Détails Techniques)
-
-* **Optimisation de la recherche (TT & Zobrist)** :
-Initialement, une recherche Minimax de profondeur 5 évaluait **1,5 million de nœuds**, causant des latences.
-* **Solution** : Utilisation du **Hachage Zobrist** et d'une **Table de Transposition (TT)**.
-* **Résultat** : La table stocke les **Valeurs Exactes, Bornes Inférieures et Supérieures**, rendant la recherche fluide.
+* **Heuristics & Evaluation**:
+* **Move Ordering (MVV-LVA)**: Prioritizes high-value captures to maximize pruning efficiency.
+* **PST Evaluation**: Uses **Piece-Square Tables** for phase-specific positional scoring.
+* **Endgame & Promotion**: Optimizes King centralization in endgames and implements **Automatic Promotion** for AI efficiency.
 
 
-* **Ordonnancement des coups (MVV-LVA)** :
-Le moteur priorise les captures selon la logique **"Victime la plus précieuse - Agresseur le moins précieux"** (ex: Dame prend Pion > Pion prend Dame) pour optimiser l'élagage **Alpha-Bêta**.
-* **Moteur d'Évaluation** :
-* **PST (Piece-Square Tables)** : Attribution de bonus de position pour chaque pièce.
-* **Logique de Finale** : En fin de partie, l'IA favorise la **centralisation et l'activité du Roi**.
-* **Promotion Automatique** : L'IA choisit automatiquement la Reine lors de la promotion pour maintenir le rythme du jeu.
+* **Human-like UX**: Features an **asynchronous 2-5s randomized delay** to simulate human deliberation.
 
+### • Chess.java (State Control & UI Engine)
 
+* **State Machine**: Orchestrates transitions between **PvP** and **PvE** modes while managing the overall game lifecycle.
+* **Responsive UI System**: A custom-coded **Scene2D** layout engine that enables **dynamic scaling** across varying window resolutions.
+* **Texture Cache**: Utilizes a `HashMap` based texture pooling system to minimize VRAM overhead.
+
+### • GameBoard.java (Rules Engine & Logic Validation)
+
+* **Move Validation**: Full implementation of **Castling**, **En Passant**, and **Pawn Promotion**.
+* **Backtracking Simulation**: Features a `simulateAndCheck` method that pre-calculates moves in a memory buffer to prevent illegal moves (e.g., self-check).
+* **Fischer Clock**: Professional timing system with incremental time bonuses per move.
 
 ---
 
-## 中文
+## ♟️ Détails Techniques 
 
-### 📌 项目简介
+### • Main.java (Démarrage et Configuration)
 
-本项目是采用 **Java 语言**与 **LibGDX 框架**开发打造的 **2D 国际象棋游戏**。支持**本地双人对战**与**人机对战**，专为**业余爱好者**设计，提供了流畅的博弈体验与三套视觉皮肤。
+* **Initialisation**: Configuration de l'OpenGL avec **Vsync** et 60 FPS pour une fluidité d'affichage optimale.
+* **Accélération Matérielle**: Utilise les ressources GPU via LibGDX pour un rendu fluide.
 
-### 🧠 AI 与核心算法 (60 余个核心方法)
+### • AI.java (Moteur de Décision et Optimisation)
 
-* **搜索优化 (从纯极小化极大到置换表)**:
-最初 5 层深度的 Minimax 搜索需计算约 **150 万个节点**，导致卡顿。
-* **解决方案**: 引入 **Zobrist Hashing** 与 **置换表 (Transposition Table)**。
-* **优化结果**: 置换表通过存储**精确值、下界和上界**，彻底消除了重复计算，使搜索达到毫秒级响应。
+* **Crise de Performance**: L'algorithme **Minimax** initial (profondeur 5) évaluait **1,5 million de nœuds**. Même sur une configuration puissante (**RTX 3050Ti + Ryzen 5600H**), cela provoquait des ralentissements majeurs.
+* **Auto-apprentissage (Table de Transposition)** : Pour résoudre ce goulot d'étranglement, j'ai **appris et implémenté de manière autonome** des techniques avancées :
+* **Hachage Zobrist**: Génération de clés 64 bits uniques pour chaque état.
+* **Optimisation TT**: Stocke les valeurs et les bornes pour supprimer les calculs redondants, réduisant le temps de réponse à quelques **millisecondes**.
 
 
-* **走法排序 (MVV-LVA)**:
-基于“**最有价值的受害者 - 最无价值的攻击者**”原则优先考虑吃子（如：后吃兵 > 兵吃后），显著提高 **Alpha-Beta 剪枝** 效率。
-* **评估引擎**:
-* **PST (棋子位置表)**: 根据棋子在不同阶段的位置给予评分加成。
-* **残局逻辑**: 棋子较少时，算法会鼓励**王的活跃性与中心化**。
-* **自动升变**: AI 回合触发兵升变时自动选择皇后。
+* **Heuristiques d'Évaluation**:
+* **MVV-LVA**: Priorise les captures pour optimiser l'élagage.
+* **Tables PST**: Attribution de scores selon la position des pièces.
+* **Logique de Finale**: Optimise la centralisation du Roi et gère la **promotion automatique**.
+
+
+* **Interaction Asynchrone**: Intègre un **délai aléatoire de 2 à 5s** pour simuler la réflexion humaine.
+
+### • Chess.java (Contrôle d'État et Moteur UI)
+
+* **Gestionnaire d'État**: Contrôle les transitions entre les modes **PvP** et **PvE**.
+* **Système UI Réactif**: Interface **Scene2D** permettant une **adaptation dynamique** à toutes les résolutions.
+* **Gestion des Textures**: Cache de textures via `HashMap` pour optimiser la mémoire vidéo.
+
+### • GameBoard.java (Moteur de Règles et Validation Logique)
+
+* **Moteur de Règles**: Implémentation complète du **Roque**, de la **Prise en passant** et de la **Promotion**.
+* **Validation par Simulation**: Utilise la méthode `simulateAndCheck` pour bloquer tout mouvement illégal.
+* **Chronomètre Fischer**: Système de temps professionnel avec incréments par coup.
+
+---
+
+## 🛠️ 技术细节 
+
+### • Main.java (启动与配置中心)
+
+* **环境初始化**：负责底层框架配置，开启 **Vsync (垂直同步)** 并设定 60FPS 的目标帧率，确保游戏画面的丝滑程度。
+* **硬件加速适配**：基于 LibGDX 引擎利用显卡 GPU 资源进行高效渲染，为后续的高频率画面重绘提供稳定的支撑。
+
+### • AI.java (博弈引擎与高性能优化)
+
+* **性能瓶颈实测**：初始版本采用基础 **Minimax** 算法配合 **Alpha-Beta 剪枝**。在 5 层深度搜索下需评估约 **150 万个节点**。实测证明，即便在配置为 **RTX 3050Ti + Ryzen 5600H** 的高性能笔记本上，依然会出现严重卡顿，无法正常对弈。
+* **自学突破 (置换表技术)**：为了攻克硬件性能瓶颈，我**自学并引入**了置换表系统进行底层优化：
+* **Zobrist Hashing**：引入哈希键值生成技术，为每个棋子与格点生成唯一的 64 位标识。
+* **冗余消除与加速**：自主构建置换表存储已搜索过的**精确值 (Exact)**、**下界 (Lower Bound)** 和 **上界 (Upper Bound)**。通过查表机制替代重复搜索，成功将搜索响应从数秒卡顿优化至 **毫秒级瞬时响应**。
+
+
+* **评估体系与启发式策略**：
+* **走法排序 (MVV-LVA)**：基于“最有价值受害者 - 最无价值攻击者”原则优先搜索吃子走法，极大提升剪枝效率。
+* **PST 分值评估 (Piece-Square Tables)**：参考成熟棋谱权重，为不同棋子在不同阶段（开局/中局/残局）的格点位置动态分配分值。
+* **残局逻辑与自动升变**：针对残局强化“王”的中心化侵略性；当 AI 触发兵升变时，系统会自动执行升变皇后操作。
+
+
+* **异步交互模拟**：设计了 **2-5 秒异步随机延迟落子**，模拟人类思考过程，增强博弈真实感。
+
+### • Chess.java (状态控制与 UI 引擎)
+
+* **状态机控制**：通过核心控制器管理 **PvP (本地对战)** 与 **PvE (人机对战)** 模式的平滑切换，维护游戏的完整生命周期。
+* **响应式 UI 系统**：纯代码手搓调试 **Scene2D UI** 布局，通过对一百多个核心方法的封装，实现了从全屏模式到任意窗口比例的 **动态比例适配** 与自动重绘。
+* **资源池化管理**：采用 `HashMap` 建立纹理缓存（Texture Cache），配合字符串拼接技术实现资源的动态按需加载，极大地优化了显存占用。
+
+### • GameBoard.java (规则引擎与逻辑校验)
+
+* **规则完整性**：精准还原 **王车易位 (Castling)**、**吃过路兵 (En Passant)** 及 **兵的升变 (Promotion)** 等全套国际象棋特殊规则。
+* **模拟回溯验证**：内置 `simulateAndCheck` 方法。在任何棋子移动执行前，系统会在内存镜像中完成“虚拟推演”，通过回溯算法确保所有移动均符合安全规则，从底层拦截非法走法。
+* **费舍尔计时系统**：实现了专业的 **Fischer Clock** 计时逻辑，支持每步补偿时间（Increment），确保比赛节奏的专业性。
 
